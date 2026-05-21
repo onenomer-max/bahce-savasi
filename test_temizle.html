@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Görsel Temizleyici Testi</title>
+    <style>
+        body { background-color: #222; color: #fff; font-family: sans-serif; text-align: center; padding: 50px; }
+        .canvas-kutu { border: 2px solid #555; margin: 20px; padding: 0; }
+        #canvas-orijinal { background-color: blue; width: 256px; height: 256px; image-rendering: pixelated; display: block; }
+        #canvas-temiz { background-color: red; width: 256px; height: 256px; image-rendering: pixelated; display: block; }
+        .container { display: flex; justify-content: center; align-items: flex-start; }
+        .box { margin: 0 20px; }
+        #log { text-align: left; background: #000; padding: 20px; font-family: monospace; font-size: 14px; margin-top: 20px; height: 300px; overflow-y: auto; color: #0f0; border: 1px solid #555; }
+    </style>
+</head>
+<body>
+
+    <h1>Çözüm A Testi: Arkaplan Temizleme (DEBUG)</h1>
+    <p>Orijinal arkaplan <b>Mavi</b>, Temizlenmiş arkaplan <b>Kırmızı</b> olarak ayarlandı.</p>
+
+    <div class="container">
+        <div class="box">
+            <h3>Orijinal</h3>
+            <div class="canvas-kutu"><canvas id="canvas-orijinal" width="64" height="64"></canvas></div>
+        </div>
+        <div class="box">
+            <h3>Temizlenmiş (Kırmızı Arkaplan)</h3>
+            <div class="canvas-kutu"><canvas id="canvas-temiz" width="64" height="64"></canvas></div>
+        </div>
+    </div>
+    
+    <div id="log">Console Çıktıları Buraya Gelecek...</div>
+
+    <script>
+        const logDiv = document.getElementById("log");
+        function writeLog(msg) {
+            logDiv.innerHTML += msg + "<br>";
+            logDiv.scrollTop = logDiv.scrollHeight;
+        }
+
+        const img = new Image();
+        img.src = "assets/bitkiler/aycicegi.png"; // Test görseli
+        
+        img.onerror = () => {
+            writeLog("<span style='color:red'>HATA: aycicegi.png yüklenemedi. Yol yanlış olabilir.</span>");
+        };
+
+        img.onload = () => {
+            writeLog("Görsel yüklendi: " + img.width + "x" + img.height);
+            try {
+                // Orijinal çizim
+                const cvsOrijinal = document.getElementById("canvas-orijinal");
+                const ctxOrijinal = cvsOrijinal.getContext("2d");
+                cvsOrijinal.width = img.width;
+                cvsOrijinal.height = img.height;
+                ctxOrijinal.drawImage(img, 0, 0);
+
+                // Temizlenecek çizim
+                const cvsTemiz = document.getElementById("canvas-temiz");
+                const ctxTemiz = cvsTemiz.getContext("2d");
+                cvsTemiz.width = img.width;
+                cvsTemiz.height = img.height;
+                ctxTemiz.drawImage(img, 0, 0);
+
+                // Pixel verilerini al
+                const imageData = ctxTemiz.getImageData(0, 0, cvsTemiz.width, cvsTemiz.height);
+                const data = imageData.data;
+                const w = cvsTemiz.width;
+                const h = cvsTemiz.height;
+
+                // Eşik ayarları
+                const maxRenkFarki = 30; // R, G, B arasındaki maksimum fark (gridir)
+                const minParlaklik = 100; // En az bu kadar parlak olmalı (siyah/koyu renkleri silmesin)
+
+                writeLog(`Ayarlar: maxRenkFarki=${maxRenkFarki}, minParlaklik=${minParlaklik}`);
+
+                let degisenPikselSayisi = 0;
+                let tespitEdilenRenkler = new Set();
+
+                function isBackground(r, g, b, a) {
+                    if (a === 0) return true; // Zaten şeffaf
+                    
+                    const isGray = Math.abs(r - g) < maxRenkFarki && 
+                                   Math.abs(r - b) < maxRenkFarki && 
+                                   Math.abs(g - b) < maxRenkFarki;
+                    const isLight = r > minParlaklik && g > minParlaklik && b > minParlaklik;
+                    
+                    if (isGray && isLight) {
+                        // Rengi formatlayıp set'e ekle (log için, en fazla 20 farklı renk)
+                        if (tespitEdilenRenkler.size < 20) {
+                            tespitEdilenRenkler.add(`RGB(${r},${g},${b})`);
+                        }
+                        return true;
+                    }
+                    return false;
+                }
+
+                const visited = new Uint8Array(w * h);
+                const queue = [];
+
+                // Sadece köşeler yerine, tüm dış çerçeveyi (border) başlangıç olarak alalım.
+                // Çünkü bazen köşelerdeki pikseller bozuk olabiliyor.
+                for (let x = 0; x < w; x++) { queue.push({x: x, y: 0}); queue.push({x: x, y: h-1}); }
+                for (let y = 0; y < h; y++) { queue.push({x: 0, y: y}); queue.push({x: w-1, y: y}); }
+
+                writeLog("Flood fill dış çerçeveden başlatılıyor...");
+
+                while (queue.length > 0) {
+                    const {x, y} = queue.shift();
+                    if (x < 0 || x >= w || y < 0 || y >= h) continue;
+                    
+                    const idx = y * w + x;
+                    if (visited[idx]) continue;
+                    visited[idx] = 1;
+
+                    const pIdx = idx * 4;
+                    const r = data[pIdx];
+                    const g = data[pIdx+1];
+                    const b = data[pIdx+2];
+                    const a = data[pIdx+3];
+
+                    if (isBackground(r, g, b, a)) {
+                        // Pikseli şeffaf yap
+                        if (data[pIdx+3] !== 0) {
+                            data[pIdx+3] = 0; 
+                            degisenPikselSayisi++;
+                        }
+                        
+                        // 8-yönlü komşuları kuyruğa ekle (çaprazlar dahi)
+                        queue.push({x: x+1, y: y}); queue.push({x: x-1, y: y});
+                        queue.push({x: x, y: y+1}); queue.push({x: x, y: y-1});
+                        queue.push({x: x+1, y: y+1}); queue.push({x: x-1, y: y-1});
+                        queue.push({x: x+1, y: y-1}); queue.push({x: x-1, y: y+1});
+                    }
+                }
+
+                ctxTemiz.putImageData(imageData, 0, 0);
+
+                writeLog(`<b>SONUÇ:</b> ${degisenPikselSayisi} piksel şeffaflaştırıldı.`);
+                writeLog(`Tespit Edilen Dama Desen Renkleri: <br>` + Array.from(tespitEdilenRenkler).join(", "));
+                
+                if (degisenPikselSayisi === 0) {
+                    writeLog("<span style='color:red'>DİKKAT: Hiçbir piksel değişmedi! Resim zaten şeffaf olabilir veya eşik değerleri uymuyor.</span>");
+                }
+
+            } catch (err) {
+                writeLog("<span style='color:red'>CORS/CANVAS HATASI: " + err.message + "</span>");
+                writeLog("Eğer 'Tainted canvases may not be exported' hatası alıyorsanız, bu dosyayı bir local server üzerinden (örn: python -m http.server) açmanız gerekir.");
+            }
+        };
+    </script>
+</body>
+</html>

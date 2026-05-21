@@ -1,0 +1,215 @@
+/* css/style.css - Oyunun Görsel Stilleri */
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+/* Genel ayarlar */
+body {
+    margin: 0;
+    padding: 0;
+    background-color: #222; /* Sayfa arkaplanı koyu */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-family: 'Press Start 2P', monospace;
+    user-select: none; /* Metin seçimi yasak */
+    overflow: hidden; /* Tam ekranda scroll çıkmasını engelle */
+}
+
+/* Ana oyun çerçevesi */
+#oyun-alani {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    background-color: #7CB342; /* Çim yeşili */
+    overflow: hidden;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    border: 4px solid #3E2723;
+    transform-origin: center center;
+}
+
+/* Oyun Sahnesi (Izgara) */
+#oyun-sahnesi {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1; /* Alt katman */
+}
+
+/* Üst Bilgi Çubuğu (HUD) */
+#ust-bilgi {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    padding: 10px 20px;
+    box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+    color: #FFFFFF;
+    text-shadow: 2px 2px 0 #000; /* Okunabilirlik için gölge */
+    pointer-events: none; /* Altındaki canvas'a tıklanabilsin diye ama butonlar hariç olacak */
+}
+
+#gunes-sayaci {
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#dalga-gostergesi {
+    font-size: 20px;
+    text-align: center;
+    flex-grow: 1;
+}
+
+/* Yeniden Başla / Başla Butonu */
+.buton {
+    background-color: #3E2723;
+    color: #FFFFFF;
+    border: 2px solid #FFD54F;
+    padding: 10px 15px;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 14px;
+    cursor: pointer;
+    pointer-events: auto; /* Tıklanabilmesi için */
+    text-transform: uppercase;
+}
+
+.buton:hover {
+    background-color: #FFD54F;
+    color: #3E2723;
+}
+
+/* Alt Bitki Kartları Menüsü */
+#alt-menu {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 120px;
+    background-color: #3E2723; /* Koyu kahverengi, ahşap hissi */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    z-index: 10;
+    border-top: 4px solid #2e1c19;
+}
+
+/* Bitki Kartı */
+.bitki-karti {
+    width: 80px;
+    height: 100px;
+    background-color: #5D4037;
+    border: 3px solid #8D6E63;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: transform 0.1s, border-color 0.1s;
+    position: relative;
+}
+
+.bitki-karti:hover {
+    transform: scale(1.05);
+}
+
+.bitki-karti.secili {
+    border-color: #FFD54F;
+    background-color: #795548;
+}
+
+.bitki-karti.yetersiz-gunes {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.bitki-karti.yetersiz-gunes:hover {
+    transform: none;
+}
+
+.bitki-karti-emoji {
+    font-size: 36px;
+    margin-bottom: 5px;
+}
+
+.bitki-karti-gorsel {
+    height: 60px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+.bitki-karti-gorsel img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+}
+
+.bitki-karti-maliyet {
+    font-size: 12px;
+    color: #FFD54F;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+@keyframes parilti {
+    0% { box-shadow: 0 0 5px #FFD700; border-color: #FFD700; background-color: #795548; }
+    50% { box-shadow: 0 0 20px #FFD700; border-color: #FFF; background-color: #8D6E63; }
+    100% { box-shadow: 0 0 5px #FFD700; border-color: #FFD700; background-color: #795548; }
+}
+
+.bitki-karti.yeni-kart {
+    animation: parilti 1s infinite;
+}
+
+/* Ekran Ortası Mesajları (Kazandın, Kaybettin vs.) */
+#merkez-mesaj {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 48px;
+    color: #FFFFFF;
+    text-shadow: 4px 4px 0 #000;
+    z-index: 20;
+    text-align: center;
+    display: none; /* Başlangıçta gizli */
+}
+
+/* Boss Banner UI */
+#boss-banner {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translate(150%, -50%) scale(0.5); /* Sa�dan gelsin */
+    background: rgba(0, 0, 0, 0.85);
+    color: #FF5722;
+    padding: 20px 40px;
+    font-size: 32px;
+    border: 4px solid #FFEB3B;
+    border-radius: 12px;
+    box-shadow: 0 0 30px #FF5722;
+    z-index: 100;
+    opacity: 0;
+    pointer-events: none;
+    text-align: center;
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    white-space: nowrap;
+}
+
+#boss-banner.aktif {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1); /* Merkeze otursun */
+}
+

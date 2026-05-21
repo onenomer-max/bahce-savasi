@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bahçe Savaşı</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+    <!-- Ana Oyun Çerçevesi -->
+    <div id="oyun-alani">
+        
+        <!-- Üst Bilgi Çubuğu (HUD) -->
+        <div id="ust-bilgi">
+            <div id="gunes-sayaci">☀️ <span id="guncel-gunes">50</span></div>
+            <div id="dalga-gostergesi">Hazırlan...</div>
+            <div>
+                <button id="buton-ses" class="buton" title="Sesi Kapat">🔊</button>
+                <button id="buton-tamekran" class="buton" title="Tam Ekran">⛶</button>
+                <button id="buton-basla" class="buton">Başla</button>
+                <button id="buton-yenile" class="buton" style="display: none;">Yeniden Başla</button>
+            </div>
+        </div>
+
+        <!-- Merkez Oyun Mesajları (Kazandın / Kaybettin) -->
+        <div id="merkez-mesaj"></div>
+
+        <!-- Çizimlerin yapılacağı tuval (Canvas) -->
+        <canvas id="oyun-sahnesi" width="1280" height="720"></canvas>
+
+        <!-- Alt Bitki Kartları Menüsü -->
+        <div id="alt-menu">
+            <!-- Kartlar JavaScript ile doldurulacak -->
+        </div>
+
+    </div>
+
+    <!-- Veri Dosyaları -->
+    <script src="data/bitkiler.js"></script>
+    <script src="data/zombiler.js"></script>
+    <script src="data/seviyeler.js"></script>
+    <script src="data/itemler.js"></script>
+
+    <!-- Oyun Kodları -->
+    <script src="js/ses_yukleyici.js"></script>
+    <script src="js/ses.js"></script>
+    <script src="js/gorsel_yukleyici.js"></script>
+    <script src="js/izgara.js"></script>
+    <script src="js/bitki.js"></script>
+    <script src="js/zombi.js"></script>
+    <script src="js/mermi.js"></script>
+    <script src="js/gunes.js"></script>
+    <script src="js/item.js"></script>
+    <script src="js/arayuz.js"></script>
+    <script src="js/oyun.js"></script>
+    <script src="js/main.js"></script>
+
+</body>
+</html>
