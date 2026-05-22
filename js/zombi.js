@@ -169,7 +169,11 @@ class Zombi {
         }
     }
 
-    hasarAl(miktar) {
+    hasarAl(miktar, hasarTipi = "yer") {
+        if (this.immuniteTipi && this.immuniteTipi === hasarTipi) {
+            console.log("🛡️ Kral immün:", hasarTipi);
+            return; // Immunite aktif, hasar almaz
+        }
         this.hp -= miktar;
         if (this.hp <= 0) {
             console.log(`💀 ${this.ad} öldü!`);

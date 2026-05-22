@@ -458,7 +458,7 @@ class Oyun {
         
         for (let z of this.zombiler) {
             if (Math.abs(z.satir - merkezSatir) <= yaricap && Math.abs(z.x - merkezKoor.x) <= etkiMesafeX) {
-                z.hasarAl(hasar);
+                z.hasarAl(hasar, "alan");
                 if (donduran) {
                     z.yavaslat(0, dondurSuresi);
                 }

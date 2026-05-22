@@ -533,6 +533,175 @@ const SEVIYELER_DATA = {
           {"tip": "balonlu", "gecikme_ms": 7000},
           {"tip": "hizli", "gecikme_ms": 9000}
         ]
+      },
+      // Dalga 41
+      {
+        "no": 41,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 1000},
+          {"tip": "balonlu", "gecikme_ms": 2000},
+          {"tip": "hizli", "gecikme_ms": 3000},
+          {"tip": "balonlu", "gecikme_ms": 4500},
+          {"tip": "kaskli", "gecikme_ms": 6000},
+          {"tip": "hizli", "gecikme_ms": 7500},
+          {"tip": "kaskli", "gecikme_ms": 9000}
+        ]
+      },
+      // Dalga 42
+      {
+        "no": 42,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "balonlu", "gecikme_ms": 0},
+          {"tip": "balonlu", "gecikme_ms": 1000},
+          {"tip": "kaskli", "gecikme_ms": 2000},
+          {"tip": "hizli", "gecikme_ms": 3000},
+          {"tip": "kaskli", "gecikme_ms": 4500},
+          {"tip": "balonlu", "gecikme_ms": 6000},
+          {"tip": "hizli", "gecikme_ms": 7500},
+          {"tip": "kaskli", "gecikme_ms": 9000},
+          {"tip": "balonlu", "gecikme_ms": 10500}
+        ]
+      },
+      // Dalga 43
+      {
+        "no": 43,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "hizli", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 800},
+          {"tip": "kaskli", "gecikme_ms": 1800},
+          {"tip": "balonlu", "gecikme_ms": 3000},
+          {"tip": "hizli", "gecikme_ms": 4200},
+          {"tip": "kaskli", "gecikme_ms": 5500},
+          {"tip": "balonlu", "gecikme_ms": 7000},
+          {"tip": "hizli", "gecikme_ms": 8500},
+          {"tip": "kaskli", "gecikme_ms": 10000}
+        ]
+      },
+      // Dalga 44
+      {
+        "no": 44,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 800},
+          {"tip": "balonlu", "gecikme_ms": 1800},
+          {"tip": "hizli", "gecikme_ms": 2800},
+          {"tip": "kaskli", "gecikme_ms": 4000},
+          {"tip": "balonlu", "gecikme_ms": 5200},
+          {"tip": "hizli", "gecikme_ms": 6500},
+          {"tip": "kaskli", "gecikme_ms": 7800},
+          {"tip": "balonlu", "gecikme_ms": 9000},
+          {"tip": "hizli", "gecikme_ms": 10500}
+        ]
+      },
+      // Dalga 45
+      {
+        "no": 45,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "balonlu", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 1000},
+          {"tip": "hizli", "gecikme_ms": 2000},
+          {"tip": "kaskli", "gecikme_ms": 3200},
+          {"tip": "balonlu", "gecikme_ms": 4500},
+          {"tip": "hizli", "gecikme_ms": 5800},
+          {"tip": "kaskli", "gecikme_ms": 7000},
+          {"tip": "balonlu", "gecikme_ms": 8200},
+          {"tip": "hizli", "gecikme_ms": 9500},
+          {"tip": "kaskli", "gecikme_ms": 11000}
+        ]
+      },
+      // Dalga 46
+      {
+        "no": 46,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "balonlu", "gecikme_ms": 800},
+          {"tip": "hizli", "gecikme_ms": 1800},
+          {"tip": "kaskli", "gecikme_ms": 3000},
+          {"tip": "balonlu", "gecikme_ms": 4200},
+          {"tip": "hizli", "gecikme_ms": 5500},
+          {"tip": "kaskli", "gecikme_ms": 6800},
+          {"tip": "balonlu", "gecikme_ms": 8000},
+          {"tip": "kaskli", "gecikme_ms": 9500},
+          {"tip": "hizli", "gecikme_ms": 11000}
+        ]
+      },
+      // Dalga 47
+      {
+        "no": 47,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "balonlu", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 800},
+          {"tip": "balonlu", "gecikme_ms": 2000},
+          {"tip": "hizli", "gecikme_ms": 3000},
+          {"tip": "kaskli", "gecikme_ms": 4000},
+          {"tip": "balonlu", "gecikme_ms": 5500},
+          {"tip": "hizli", "gecikme_ms": 6800},
+          {"tip": "kaskli", "gecikme_ms": 8000},
+          {"tip": "balonlu", "gecikme_ms": 9500},
+          {"tip": "kaskli", "gecikme_ms": 11000}
+        ]
+      },
+      // Dalga 48
+      {
+        "no": 48,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 700},
+          {"tip": "hizli", "gecikme_ms": 1500},
+          {"tip": "balonlu", "gecikme_ms": 2500},
+          {"tip": "kaskli", "gecikme_ms": 3700},
+          {"tip": "hizli", "gecikme_ms": 5000},
+          {"tip": "balonlu", "gecikme_ms": 6200},
+          {"tip": "kaskli", "gecikme_ms": 7500},
+          {"tip": "hizli", "gecikme_ms": 8800},
+          {"tip": "balonlu", "gecikme_ms": 10000},
+          {"tip": "kaskli", "gecikme_ms": 11500}
+        ]
+      },
+      // Dalga 49
+      {
+        "no": 49,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "balonlu", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 600},
+          {"tip": "kaskli", "gecikme_ms": 1500},
+          {"tip": "hizli", "gecikme_ms": 2500},
+          {"tip": "balonlu", "gecikme_ms": 3700},
+          {"tip": "kaskli", "gecikme_ms": 5000},
+          {"tip": "hizli", "gecikme_ms": 6200},
+          {"tip": "balonlu", "gecikme_ms": 7500},
+          {"tip": "kaskli", "gecikme_ms": 8800},
+          {"tip": "hizli", "gecikme_ms": 10000},
+          {"tip": "balonlu", "gecikme_ms": 11500},
+          {"tip": "kaskli", "gecikme_ms": 13000}
+        ]
+      },
+      // Dalga 50 (Zombi Kral)
+      {
+        "no": 50,
+        "dalga_gecikme_ms": 30000,
+        "boss": true,
+        "final": true,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "hizli", "gecikme_ms": 1000},
+          {"tip": "balonlu", "gecikme_ms": 2000},
+          {"tip": "zombi_kral", "gecikme_ms": 4000},
+          {"tip": "kaskli", "gecikme_ms": 6000},
+          {"tip": "hizli", "gecikme_ms": 8000},
+          {"tip": "balonlu", "gecikme_ms": 10000},
+          {"tip": "kaskli", "gecikme_ms": 12000}
+        ]
       }
     ]
   }
