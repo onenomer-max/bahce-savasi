@@ -601,6 +601,7 @@ class Oyun {
                         if (zombi.tip === "vampir_zombi") {
                             const emilen = zombi.data.hasar * zombi.data.emme_orani;
                             zombi.hp = Math.min(zombi.hp + emilen, zombi.maxHp);
+                            console.log("🩸 Vampir HP emer:", emilen, "Yeni HP:", zombi.hp);
                         }
                     }
                     break;

@@ -389,6 +389,150 @@ const SEVIYELER_DATA = {
           {"tip": "kaskli", "gecikme_ms": 5000},
           {"tip": "koni", "gecikme_ms": 7000}
         ]
+      },
+      // Dalga 31
+      {
+        "no": 31,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "hizli", "gecikme_ms": 1000},
+          {"tip": "kaskli", "gecikme_ms": 2500},
+          {"tip": "balonlu", "gecikme_ms": 4000},
+          {"tip": "hizli", "gecikme_ms": 5500},
+          {"tip": "kaskli", "gecikme_ms": 7000}
+        ]
+      },
+      // Dalga 32
+      {
+        "no": 32,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "hizli", "gecikme_ms": 0},
+          {"tip": "hizli", "gecikme_ms": 1200},
+          {"tip": "kaskli", "gecikme_ms": 2500},
+          {"tip": "balonlu", "gecikme_ms": 4000},
+          {"tip": "kaskli", "gecikme_ms": 5500},
+          {"tip": "hizli", "gecikme_ms": 7000},
+          {"tip": "kaskli", "gecikme_ms": 8500}
+        ]
+      },
+      // Dalga 33
+      {
+        "no": 33,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "balonlu", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 1500},
+          {"tip": "balonlu", "gecikme_ms": 3000},
+          {"tip": "hizli", "gecikme_ms": 4500},
+          {"tip": "kaskli", "gecikme_ms": 6000},
+          {"tip": "balonlu", "gecikme_ms": 7500},
+          {"tip": "hizli", "gecikme_ms": 9000}
+        ]
+      },
+      // Dalga 34
+      {
+        "no": 34,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 1000},
+          {"tip": "hizli", "gecikme_ms": 2000},
+          {"tip": "hizli", "gecikme_ms": 3000},
+          {"tip": "balonlu", "gecikme_ms": 4500},
+          {"tip": "kaskli", "gecikme_ms": 6000},
+          {"tip": "balonlu", "gecikme_ms": 7500},
+          {"tip": "hizli", "gecikme_ms": 9000}
+        ]
+      },
+      // Dalga 35
+      {
+        "no": 35,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "hizli", "gecikme_ms": 0},
+          {"tip": "balonlu", "gecikme_ms": 1000},
+          {"tip": "kaskli", "gecikme_ms": 2500},
+          {"tip": "balonlu", "gecikme_ms": 4000},
+          {"tip": "hizli", "gecikme_ms": 5500},
+          {"tip": "kaskli", "gecikme_ms": 7000},
+          {"tip": "balonlu", "gecikme_ms": 8500},
+          {"tip": "kaskli", "gecikme_ms": 10000}
+        ]
+      },
+      // Dalga 36
+      {
+        "no": 36,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "balonlu", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 1500},
+          {"tip": "balonlu", "gecikme_ms": 3000},
+          {"tip": "hizli", "gecikme_ms": 4500},
+          {"tip": "kaskli", "gecikme_ms": 6000},
+          {"tip": "balonlu", "gecikme_ms": 7500},
+          {"tip": "kaskli", "gecikme_ms": 9000}
+        ]
+      },
+      // Dalga 37
+      {
+        "no": 37,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "hizli", "gecikme_ms": 1000},
+          {"tip": "kaskli", "gecikme_ms": 2000},
+          {"tip": "balonlu", "gecikme_ms": 3500},
+          {"tip": "hizli", "gecikme_ms": 5000},
+          {"tip": "kaskli", "gecikme_ms": 6500},
+          {"tip": "balonlu", "gecikme_ms": 8000},
+          {"tip": "kaskli", "gecikme_ms": 9500}
+        ]
+      },
+      // Dalga 38
+      {
+        "no": 38,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "hizli", "gecikme_ms": 0},
+          {"tip": "balonlu", "gecikme_ms": 1000},
+          {"tip": "kaskli", "gecikme_ms": 2200},
+          {"tip": "balonlu", "gecikme_ms": 3500},
+          {"tip": "hizli", "gecikme_ms": 4800},
+          {"tip": "kaskli", "gecikme_ms": 6000},
+          {"tip": "balonlu", "gecikme_ms": 7500},
+          {"tip": "hizli", "gecikme_ms": 9000}
+        ]
+      },
+      // Dalga 39
+      {
+        "no": 39,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 1000},
+          {"tip": "balonlu", "gecikme_ms": 2000},
+          {"tip": "hizli", "gecikme_ms": 3000},
+          {"tip": "kaskli", "gecikme_ms": 4500},
+          {"tip": "balonlu", "gecikme_ms": 6000},
+          {"tip": "hizli", "gecikme_ms": 7500},
+          {"tip": "kaskli", "gecikme_ms": 9000}
+        ]
+      },
+      // Dalga 40 (Vampir Boss)
+      {
+        "no": 40,
+        "dalga_gecikme_ms": 30000,
+        "boss": true,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "hizli", "gecikme_ms": 1500},
+          {"tip": "vampir_zombi", "gecikme_ms": 3000},
+          {"tip": "kaskli", "gecikme_ms": 5000},
+          {"tip": "balonlu", "gecikme_ms": 7000},
+          {"tip": "hizli", "gecikme_ms": 9000}
+        ]
       }
     ]
   }
