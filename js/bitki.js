@@ -215,6 +215,7 @@ class Bitki {
         }
         
         if (this.hp < this.maxHp) {
+            const barGenislik = 40;
             const barYukseklik = 6;
             const barX = cizimX - barGenislik / 2;
             const barY = this.y - 30;

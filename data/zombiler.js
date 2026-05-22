@@ -73,5 +73,43 @@ const ZOMBILER_DATA = {
     "ozel_mekanik": "diriltme",
     "ozel_periyot_ms": 6000,
     "boss_baslik": "🧙 NEKROMANT GELİYOR! 🧙"
+  },
+  "mekanik_zombi": {
+    "ad": "Mekanik Zombi",
+    "emoji": "🤖",
+    "görsel": "assets/zombiler/boss_mekanik.png",
+    "boyut": 130,
+    "hp": 3000,
+    "hız": 0.4,
+    "hasar": 50,
+    "boss": true,
+    "ozel_yetenek": "elektrik_soku",
+    "sok_periyot_ms": 8000,
+    "sok_sure_ms": 5000
+  },
+  "vampir_zombi": {
+    "ad": "Vampir Zombi",
+    "emoji": "🧛",
+    "görsel": "assets/zombiler/boss_vampir.png",
+    "boyut": 130,
+    "hp": 4000,
+    "hız": 0.45,
+    "hasar": 60,
+    "boss": true,
+    "ozel_yetenek": "hp_emer",
+    "emme_orani": 0.5
+  },
+  "zombi_kral": {
+    "ad": "Zombi Kral",
+    "emoji": "👑",
+    "görsel": "assets/zombiler/boss_kral.png",
+    "boyut": 160,
+    "hp": 5000,
+    "hız": 0.3,
+    "hasar": 100,
+    "boss": true,
+    "ozel_yetenek": "spawn_kral",
+    "spawn_periyot_ms": 4000,
+    "immunite_periyot_ms": 10000
   }
 };

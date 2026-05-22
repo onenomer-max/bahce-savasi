@@ -258,6 +258,137 @@ const SEVIYELER_DATA = {
           { "tip": "normal", "satir": 0, "gecikme_ms": 17000 },
           { "tip": "normal", "satir": 4, "gecikme_ms": 18000 }
         ]
+      },
+      // Dalga 21
+      {
+        "no": 21,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "normal", "gecikme_ms": 0},
+          {"tip": "normal", "gecikme_ms": 2000},
+          {"tip": "koni", "gecikme_ms": 4000},
+          {"tip": "hizli", "gecikme_ms": 6000},
+          {"tip": "normal", "gecikme_ms": 8000}
+        ]
+      },
+      // Dalga 22
+      {
+        "no": 22,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "koni", "gecikme_ms": 0},
+          {"tip": "normal", "gecikme_ms": 1500},
+          {"tip": "hizli", "gecikme_ms": 3000},
+          {"tip": "kaskli", "gecikme_ms": 5000},
+          {"tip": "normal", "gecikme_ms": 7000}
+        ]
+      },
+      // Dalga 23
+      {
+        "no": 23,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "hizli", "gecikme_ms": 0},
+          {"tip": "hizli", "gecikme_ms": 1000},
+          {"tip": "kaskli", "gecikme_ms": 3000},
+          {"tip": "koni", "gecikme_ms": 5000},
+          {"tip": "normal", "gecikme_ms": 6500},
+          {"tip": "kaskli", "gecikme_ms": 8500}
+        ]
+      },
+      // Dalga 24
+      {
+        "no": 24,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "hizli", "gecikme_ms": 1500},
+          {"tip": "balonlu", "gecikme_ms": 3000},
+          {"tip": "koni", "gecikme_ms": 4500},
+          {"tip": "kaskli", "gecikme_ms": 6000},
+          {"tip": "hizli", "gecikme_ms": 8000}
+        ]
+      },
+      // Dalga 25
+      {
+        "no": 25,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "hizli", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 1000},
+          {"tip": "balonlu", "gecikme_ms": 2500},
+          {"tip": "kaskli", "gecikme_ms": 4000},
+          {"tip": "hizli", "gecikme_ms": 5500},
+          {"tip": "balonlu", "gecikme_ms": 7000},
+          {"tip": "kaskli", "gecikme_ms": 9000}
+        ]
+      },
+      // Dalga 26
+      {
+        "no": 26,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "hizli", "gecikme_ms": 0},
+          {"tip": "hizli", "gecikme_ms": 1500},
+          {"tip": "kaskli", "gecikme_ms": 3000},
+          {"tip": "koni", "gecikme_ms": 4500},
+          {"tip": "balonlu", "gecikme_ms": 6000},
+          {"tip": "kaskli", "gecikme_ms": 8000}
+        ]
+      },
+      // Dalga 27
+      {
+        "no": 27,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "hizli", "gecikme_ms": 1000},
+          {"tip": "balonlu", "gecikme_ms": 2500},
+          {"tip": "kaskli", "gecikme_ms": 4000},
+          {"tip": "hizli", "gecikme_ms": 5500},
+          {"tip": "balonlu", "gecikme_ms": 7000},
+          {"tip": "kaskli", "gecikme_ms": 9000}
+        ]
+      },
+      // Dalga 28
+      {
+        "no": 28,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "balonlu", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 1500},
+          {"tip": "hizli", "gecikme_ms": 3000},
+          {"tip": "balonlu", "gecikme_ms": 4500},
+          {"tip": "kaskli", "gecikme_ms": 6000},
+          {"tip": "hizli", "gecikme_ms": 8000}
+        ]
+      },
+      // Dalga 29
+      {
+        "no": 29,
+        "dalga_gecikme_ms": 20000,
+        "zombiler": [
+          {"tip": "kaskli", "gecikme_ms": 0},
+          {"tip": "kaskli", "gecikme_ms": 1000},
+          {"tip": "hizli", "gecikme_ms": 2500},
+          {"tip": "balonlu", "gecikme_ms": 4000},
+          {"tip": "hizli", "gecikme_ms": 5000},
+          {"tip": "kaskli", "gecikme_ms": 7000},
+          {"tip": "balonlu", "gecikme_ms": 9000}
+        ]
+      },
+      // Dalga 30 (Mekanik Boss)
+      {
+        "no": 30,
+        "dalga_gecikme_ms": 30000,
+        "boss": true,
+        "zombiler": [
+          {"tip": "normal", "gecikme_ms": 0},
+          {"tip": "normal", "gecikme_ms": 1500},
+          {"tip": "mekanik_zombi", "gecikme_ms": 3000},
+          {"tip": "kaskli", "gecikme_ms": 5000},
+          {"tip": "koni", "gecikme_ms": 7000}
+        ]
       }
     ]
   }
