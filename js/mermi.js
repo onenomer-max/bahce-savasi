@@ -8,7 +8,7 @@ class Mermi {
         this.hasar = bitkiVeri.hasar || 0;
         this.hiz = bitkiVeri.mermi_hizi || 5; // Hız (Piksel / Kare)
         this.emoji = bitkiVeri.mermi_emoji || "🟢";
-        this.gorselYolu = bitkiVeri.mermi_görsel || null;
+        this.gorselYolu = bitkiVeri.mermi_gorsel || null;
         
         // Yeni Mekanikler (Faz 3A)
         this.yavaslatmaOrani = bitkiVeri.yavaslatma_oran || null;
@@ -44,8 +44,13 @@ class Mermi {
         let gorselCizildi = false;
         if (gorselYolu && window.gorselYukleyici) {
             const gorsel = window.gorselYukleyici.getir(gorselYolu);
-            if (gorsel) {
-                const boyut = 48; // Bezelye için görünürlük
+            if (gorsel && gorsel.complete) {
+                let boyut = 48; // Standart görünürlük
+                if (gorselYolu.includes('patlayan_kavun')) {
+                    boyut = 56; // Daha tehditkar
+                } else if (gorselYolu.includes('kaktus_dikeni')) {
+                    boyut = 40; // İnce ve hızlı
+                }
                 ctx.drawImage(gorsel, this.x - boyut / 2, this.y - boyut / 2, boyut, boyut);
                 gorselCizildi = true;
             }

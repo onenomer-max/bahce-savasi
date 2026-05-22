@@ -28,6 +28,43 @@ class Zombi {
         
         this.sonIsirmaZamani = 0;
         this.hareketEdiyor = true;
+        
+        // Animasyon Ayarları
+        const FRAME_SURELERI = {
+            "normal": 200,
+            "koni": 200,
+            "hizli": 100,
+            "kaskli": 220,
+            "balonlu": 250,
+            "gulyabani": 300,
+            "nekromant": 280,
+            "boss_gulyabani": 300,
+            "boss_nekromant": 280
+        };
+        
+        this.frameIndex = 0;
+        this.frameZaman = 0;
+        this.frameSuresi = FRAME_SURELERI[this.tip] || 200;
+        this.animasyonFrameSayisi = 4;
+        
+        const prefixHaritasi = {
+            "normal": "zombi_normal_walk",
+            "koni": "zombi_koni_walk",
+            "hizli": "zombi_hizli_walk",
+            "kaskli": "zombi_kaskli_walk",
+            "balonlu": "zombi_balonlu_walk",
+            "gulyabani": "zombi_gulyabani_walk",
+            "nekromant": "zombi_nekromant_walk",
+            "boss_gulyabani": "zombi_gulyabani_walk",
+            "boss_nekromant": "zombi_nekromant_walk"
+        };
+        
+        if (prefixHaritasi[this.tip]) {
+            this.animasyonAdiPrefix = prefixHaritasi[this.tip];
+            this.animasyonVar = true;
+        } else {
+            this.animasyonVar = false;
+        }
     }
 
     yavaslat(oran, sureMs) {
@@ -71,8 +108,16 @@ class Zombi {
 
         if (this.hareketEdiyor) {
             // Sola doğru hareket et
-            // Hiz değeri piksel/milisaniye cinsinden
             this.x -= this.hiz * (gecenZaman / 16); // 60 FPS bazlı
+            
+            // Animasyon güncelleme
+            if (this.animasyonVar) {
+                this.frameZaman += gecenZaman;
+                if (this.frameZaman >= this.frameSuresi) {
+                    this.frameZaman = 0;
+                    this.frameIndex = (this.frameIndex + 1) % this.animasyonFrameSayisi;
+                }
+            }
         } else {
             // Isırma mantığı
             this.sonIsirmaZamani += gecenZaman;
@@ -116,9 +161,15 @@ class Zombi {
             cizimY -= 20; // Havadaki zombiler biraz yukarıda görünsün
         }
         
-        if (this.gorselYolu && window.gorselYukleyici) {
-            const gorsel = window.gorselYukleyici.getir(this.gorselYolu);
-            if (gorsel) {
+        let gorselYolu = this.gorselYolu;
+        if (this.animasyonVar) {
+            const frameNo = this.frameIndex + 1; // 1-4
+            gorselYolu = `assets/zombiler/animasyon/${this.animasyonAdiPrefix}_${frameNo}.png`;
+        }
+        
+        if (gorselYolu && window.gorselYukleyici) {
+            const gorsel = window.gorselYukleyici.getir(gorselYolu);
+            if (gorsel && gorsel.complete) {
                 const boyut = this.data.boyut || 80; // Boss boyutu veya normal boyut
                 ctx.save();
                 

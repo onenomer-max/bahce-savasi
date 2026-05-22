@@ -24,8 +24,45 @@ class GorselYukleyici {
             "assets/zombiler/boss_gulyabani.png",
             "assets/zombiler/boss_nekromant.png",
             
+            "assets/zombiler/animasyon/zombi_normal_walk_1.png",
+            "assets/zombiler/animasyon/zombi_normal_walk_2.png",
+            "assets/zombiler/animasyon/zombi_normal_walk_3.png",
+            "assets/zombiler/animasyon/zombi_normal_walk_4.png",
+            
+            "assets/zombiler/animasyon/zombi_koni_walk_1.png",
+            "assets/zombiler/animasyon/zombi_koni_walk_2.png",
+            "assets/zombiler/animasyon/zombi_koni_walk_3.png",
+            "assets/zombiler/animasyon/zombi_koni_walk_4.png",
+            
+            "assets/zombiler/animasyon/zombi_hizli_walk_1.png",
+            "assets/zombiler/animasyon/zombi_hizli_walk_2.png",
+            "assets/zombiler/animasyon/zombi_hizli_walk_3.png",
+            "assets/zombiler/animasyon/zombi_hizli_walk_4.png",
+            
+            "assets/zombiler/animasyon/zombi_kaskli_walk_1.png",
+            "assets/zombiler/animasyon/zombi_kaskli_walk_2.png",
+            "assets/zombiler/animasyon/zombi_kaskli_walk_3.png",
+            "assets/zombiler/animasyon/zombi_kaskli_walk_4.png",
+            
+            "assets/zombiler/animasyon/zombi_balonlu_walk_1.png",
+            "assets/zombiler/animasyon/zombi_balonlu_walk_2.png",
+            "assets/zombiler/animasyon/zombi_balonlu_walk_3.png",
+            "assets/zombiler/animasyon/zombi_balonlu_walk_4.png",
+            
+            "assets/zombiler/animasyon/zombi_gulyabani_walk_1.png",
+            "assets/zombiler/animasyon/zombi_gulyabani_walk_2.png",
+            "assets/zombiler/animasyon/zombi_gulyabani_walk_3.png",
+            "assets/zombiler/animasyon/zombi_gulyabani_walk_4.png",
+            
+            "assets/zombiler/animasyon/zombi_nekromant_walk_1.png",
+            "assets/zombiler/animasyon/zombi_nekromant_walk_2.png",
+            "assets/zombiler/animasyon/zombi_nekromant_walk_3.png",
+            "assets/zombiler/animasyon/zombi_nekromant_walk_4.png",
+            
             "assets/mermiler/bezelye_mermi.png",
             "assets/mermiler/kar_bezelye_mermi.png",
+            "assets/mermiler/kaktus_dikeni.png",
+            "assets/mermiler/patlayan_kavun_mermi.png",
             
             "assets/itemler/para.png",
             "assets/itemler/kalp.png",

@@ -26,6 +26,7 @@ const BITKILER_DATA = {
     "tip": "saldirgan",
     "atis_periyot_ms": 1500,
     "hasar": 20,
+    "mermi_gorsel": "assets/mermiler/bezelye_mermi.png",
     "mermi_emoji": "🟢",
     "mermi_hizi": 5,
     "yetenek": {
@@ -60,7 +61,7 @@ const BITKILER_DATA = {
     "atis_periyot_ms": 1500,
     "hasar": 20,
     "mermi_emoji": "🟦",
-    "mermi_görsel": "assets/efektler/kar_bezelye_mermi.png",
+    "mermi_gorsel": "assets/mermiler/kar_bezelye_mermi.png",
     "mermi_hizi": 5,
     "yavaslatma_sure_ms": 3000,
     "yavaslatma_oran": 0.5,
@@ -82,7 +83,7 @@ const BITKILER_DATA = {
     "hasar": 80,
     "alan_yaricap": 1,
     "mermi_emoji": "🍈",
-    "mermi_görsel": "assets/efektler/patlama.png",
+    "mermi_gorsel": "assets/mermiler/patlayan_kavun_mermi.png",
     "mermi_hizi": 4,
     "yetenek": {
       "ad": "Kavun Yağmuru",
@@ -112,7 +113,7 @@ const BITKILER_DATA = {
     "atis_periyot_ms": 1500,
     "hasar": 20,
     "mermi_emoji": "🟢",
-    "mermi_görsel": "assets/efektler/bezelye_mermi.png",
+    "mermi_gorsel": "assets/mermiler/kaktus_dikeni.png",
     "mermi_hizi": 5,
     "hedef_alabilir": ["yer", "hava"],
     "yetenek": {
