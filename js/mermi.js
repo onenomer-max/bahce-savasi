@@ -10,11 +10,12 @@ class Mermi {
         this.emoji = bitkiVeri.mermi_emoji || "🟢";
         this.gorselYolu = bitkiVeri.mermi_gorsel || null;
         
-        // Yeni Mekanikler (Faz 3A)
         this.yavaslatmaOrani = bitkiVeri.yavaslatma_oran || null;
         this.yavaslatmaSuresi = bitkiVeri.yavaslatma_sure_ms || null;
-        this.alanYaricap = bitkiVeri.alan_yaricap || 0;
+        this.alanYaricap = bitkiVeri.alan_hasar_radius || bitkiVeri.alan_yaricap || 0;
         this.hedefAlabilir = bitkiVeri.hedef_alabilir || ["yer"];
+        this.donduran = bitkiVeri.donduran || false;
+        this.dondurSuresi = bitkiVeri.dondur_sure_ms || 0;
         
         this.aktif = true; // Mermi hedefe çarptığında false olur
     }

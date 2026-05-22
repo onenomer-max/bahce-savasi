@@ -76,7 +76,32 @@ class GorselYukleyici {
             
             "assets/arkaplan/cim_doku.png",
             "assets/arkaplan/kart_zemini.png",
-            "assets/arkaplan/basla_butonu.png"
+            "assets/arkaplan/basla_butonu.png",
+            
+                        "assets/zombiler/boss_mekanik.png",
+            "assets/zombiler/boss_vampir.png",
+            "assets/zombiler/boss_kral.png",
+            
+            "assets/zombiler/animasyon/zombi_mekanik_walk_1.png",
+            "assets/zombiler/animasyon/zombi_mekanik_walk_2.png",
+            "assets/zombiler/animasyon/zombi_mekanik_walk_3.png",
+            "assets/zombiler/animasyon/zombi_mekanik_walk_4.png",
+            
+            "assets/zombiler/animasyon/zombi_vampir_walk_1.png",
+            "assets/zombiler/animasyon/zombi_vampir_walk_2.png",
+            "assets/zombiler/animasyon/zombi_vampir_walk_3.png",
+            "assets/zombiler/animasyon/zombi_vampir_walk_4.png",
+            
+            "assets/zombiler/animasyon/zombi_kral_walk_1.png",
+            "assets/zombiler/animasyon/zombi_kral_walk_2.png",
+            "assets/zombiler/animasyon/zombi_kral_walk_3.png",
+            "assets/zombiler/animasyon/zombi_kral_walk_4.png",
+"assets/bitkiler/hibrit/gunes_atici.png",
+            "assets/bitkiler/hibrit/dondurucu_mitralyoz.png",
+            "assets/bitkiler/hibrit/buz_kalesi.png",
+            "assets/bitkiler/hibrit/patlayan_hava_topu.png",
+            "assets/bitkiler/hibrit/buz_kavunu.png",
+            "assets/bitkiler/hibrit/zirhli_aycicegi.png"
         ];
     }
 

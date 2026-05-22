@@ -17,6 +17,11 @@ class Oyun {
         this.itemler = []; // Faz 4: Düşen eşyalar
         this.efektler = []; // Patlama gibi geçici görsel efektler için
         
+        // Fusion Sürükle-Bırak State
+        this.surukleAktif = false;
+        this.suruklenenBitki = null;
+        this.surukleKonum = { x: 0, y: 0 };
+        
         // Seviye verisini al
         this.seviye = SEVIYELER_DATA["seviye_1"];
         
@@ -183,14 +188,89 @@ class Oyun {
                 if (hucre) {
                     this.bitkiYerlestir(this.arayuz.seciliBitkiTipi, hucre.satir, hucre.sutun);
                 }
+            } else {
+                // MOD 2: Sürükle bırak için bitkiyi tut
+                let hucre = this.izgara.hucreBul(x, y);
+                if (hucre) {
+                    let bitki = this.bitkiler.find(b => b.satir === hucre.satir && b.sutun === hucre.sutun);
+                    if (bitki) {
+                        this.surukleAktif = true;
+                        this.suruklenenBitki = { bitki: bitki, kaynak: { satir: hucre.satir, sutun: hucre.sutun } };
+                        this.surukleKonum = { x: x, y: y };
+                    }
+                }
             }
         };
 
+        const handleMove = (e) => {
+            if (!this.surukleAktif) return;
+            let clientX = e.clientX || (e.touches && e.touches[0].clientX);
+            let clientY = e.clientY || (e.touches && e.touches[0].clientY);
+            const rect = this.canvas.getBoundingClientRect();
+            const scaleX = this.canvas.width / rect.width;
+            const scaleY = this.canvas.height / rect.height;
+            this.surukleKonum = {
+                x: (clientX - rect.left) * scaleX,
+                y: (clientY - rect.top) * scaleY
+            };
+        };
+
+        const handleUp = (e) => {
+            if (!this.surukleAktif) return;
+            
+            let clientX = e.clientX || (e.changedTouches && e.changedTouches[0].clientX);
+            let clientY = e.clientY || (e.changedTouches && e.changedTouches[0].clientY);
+            const rect = this.canvas.getBoundingClientRect();
+            const scaleX = this.canvas.width / rect.width;
+            const scaleY = this.canvas.height / rect.height;
+            const x = (clientX - rect.left) * scaleX;
+            const y = (clientY - rect.top) * scaleY;
+            
+            let hucre = this.izgara.hucreBul(x, y);
+            if (hucre && this.suruklenenBitki) {
+                const satir = hucre.satir;
+                const sutun = hucre.sutun;
+                const hedefBitki = this.bitkiler.find(b => b.satir === satir && b.sutun === sutun);
+                const kaynak = this.suruklenenBitki.kaynak;
+                
+                if (satir !== kaynak.satir || sutun !== kaynak.sutun) {
+                    if (hedefBitki) {
+                        const tarifAdi = `${this.suruklenenBitki.bitki.tip}+${hedefBitki.tip}`;
+                        const tarif = typeof FUSION_TARIFLERI !== "undefined" ? FUSION_TARIFLERI[tarifAdi] : null;
+                        
+                        if (tarif) {
+                            if (typeof fusionAcikMi !== "undefined" && fusionAcikMi(tarif)) {
+                                this.fusionGerceklestir(satir, sutun, hedefBitki, this.suruklenenBitki.bitki.tip, tarif);
+                                this.bitkiSil(kaynak.satir, kaynak.sutun);
+                            } else {
+                                if (window.arayuz) window.arayuz.mesajGoster(`🔒 Level ${tarif.acilma_seviye}'de açılır!`);
+                            }
+                        } else {
+                            if (window.arayuz) window.arayuz.mesajGoster("Bu ikisi birleşemez!");
+                        }
+                    }
+                }
+            }
+            
+            this.surukleAktif = false;
+            this.suruklenenBitki = null;
+        };
+
         this.canvas.addEventListener("mousedown", handleInput);
+        this.canvas.addEventListener("mousemove", handleMove);
+        this.canvas.addEventListener("mouseup", handleUp);
+        
         this.canvas.addEventListener("touchstart", (e) => {
-            // Ekranda scroll olmasını engelle ve kendi mantığımıza bırak
             if (e.cancelable) e.preventDefault();
             handleInput(e);
+        }, { passive: false });
+        this.canvas.addEventListener("touchmove", (e) => {
+            if (e.cancelable) e.preventDefault();
+            handleMove(e);
+        }, { passive: false });
+        this.canvas.addEventListener("touchend", (e) => {
+            if (e.cancelable) e.preventDefault();
+            handleUp(e);
         }, { passive: false });
         
         // Çift tıklama olayı (Özel Yetenek Tetikleme)
@@ -220,11 +300,31 @@ class Oyun {
         });
     }
 
-    // Yeni bitki yerleştirme
+    // Yeni bitki yerleştirme ve Mod 1 Fusion
     bitkiYerlestir(bitkiTipi, satir, sutun) {
         // Bu hücrede zaten bitki var mı?
-        const doluMu = this.bitkiler.some(b => b.satir === satir && b.sutun === sutun);
-        if (doluMu) {
+        const mevcutBitki = this.bitkiler.find(b => b.satir === satir && b.sutun === sutun);
+        
+        // FUSION KONTROL ÖNCELİKLİ
+        if (mevcutBitki && typeof FUSION_TARIFLERI !== 'undefined') {
+            const tarifAdi = `${mevcutBitki.tip}+${bitkiTipi}`;
+            const tarif = FUSION_TARIFLERI[tarifAdi];
+            
+            if (tarif) {
+                if (typeof fusionAcikMi !== "undefined" && fusionAcikMi(tarif)) {
+                    this.fusionGerceklestir(satir, sutun, mevcutBitki, bitkiTipi, tarif);
+                    return; // Fusion yapıldı, normal yerleşim çağırma
+                } else {
+                    if (window.arayuz) window.arayuz.mesajGoster(`🔒 Level ${tarif.acilma_seviye}'de açılır!`);
+                    return;
+                }
+            } else {
+                if (window.arayuz) window.arayuz.mesajGoster("Bu ikisi birleşemez!");
+                return;
+            }
+        }
+        
+        if (mevcutBitki) {
             console.log("Bu hücre dolu!");
             return;
         }
@@ -245,7 +345,54 @@ class Oyun {
             // Seçimi iptal et
             this.arayuz.seciliBitkiTipi = null;
             this.arayuz.kartlariGuncelle();
+        } else {
+            if (window.arayuz) window.arayuz.mesajGoster("Yeterli güneş yok!");
         }
+    }
+
+    fusionGerceklestir(satir, sutun, hedefBitki, eklenenBitkiTip, tarif) {
+        const yeniBitkiData = BITKILER_DATA[tarif.sonuc];
+        const eklenenVeri = BITKILER_DATA[eklenenBitkiTip];
+        
+        const ekMaliyet = Math.max(0, yeniBitkiData.maliyet - (hedefBitki.data.maliyet + eklenenVeri.maliyet)) || 0;
+        
+        if (this.gunesSayisi >= ekMaliyet) {
+            this.gunesEkle(-ekMaliyet);
+            
+            this.bitkiSil(satir, sutun);
+            
+            const merkez = this.izgara.merkezKoordinat(satir, sutun);
+            const yeniBitki = new Bitki(tarif.sonuc, satir, sutun, merkez.x, merkez.y);
+            this.bitkiler.push(yeniBitki);
+            
+            this.fusionEfektiOlustur(satir, sutun, yeniBitkiData.ad);
+            if (window.sesYonetici) window.sesYonetici.efektCal("yetenek_aktif");
+            console.log(`🧬 FUSION: ${yeniBitkiData.ad} oluşturuldu!`);
+            
+            if (this.arayuz) {
+                this.arayuz.seciliBitkiTipi = null;
+                this.arayuz.kartlariGuncelle();
+            }
+        } else {
+            if (window.arayuz) window.arayuz.mesajGoster("Yeterli güneş yok!");
+        }
+    }
+    
+    bitkiSil(satir, sutun) {
+        this.bitkiler = this.bitkiler.filter(b => !(b.satir === satir && b.sutun === sutun));
+    }
+    
+    fusionEfektiOlustur(satir, sutun, isim) {
+        const merkez = this.izgara.merkezKoordinat(satir, sutun);
+        this.efektler.push({
+            x: merkez.x, y: merkez.y, gecenZaman: 0, suresi: 1500, tur: 'fusion', metin: `✨ ${isim}! ✨`
+        });
+    }
+
+    fusionAcildiBildir(bitkiAd, seviye) {
+        this.efektler.push({
+            x: this.canvas.width / 2, y: this.canvas.height / 2, gecenZaman: 0, suresi: 3000, tur: 'fusion_acildi', metin: `🎉 YENİ FUSION AÇILDI: ${bitkiAd}! 🎉`
+        });
     }
 
     // Güneş ekle/çıkar ve UI güncelle
@@ -304,7 +451,7 @@ class Oyun {
     }
 
     // 3x3 (yaricap: 1) alan hasarı uygulamak için
-    alanHasariVer(merkezSatir, merkezSutun, yaricap, hasar, efektGoster) {
+    alanHasariVer(merkezSatir, merkezSutun, yaricap, hasar, efektGoster, donduran = false, dondurSuresi = 0) {
         const merkezKoor = this.izgara.merkezKoordinat(merkezSatir, merkezSutun);
         // İki hücrenin x eksenindeki genişliği etki alanı olur
         const etkiMesafeX = yaricap * this.izgara.hucreGenislik + 60; 
@@ -312,6 +459,9 @@ class Oyun {
         for (let z of this.zombiler) {
             if (Math.abs(z.satir - merkezSatir) <= yaricap && Math.abs(z.x - merkezKoor.x) <= etkiMesafeX) {
                 z.hasarAl(hasar);
+                if (donduran) {
+                    z.yavaslat(0, dondurSuresi);
+                }
             }
         }
         
@@ -347,12 +497,14 @@ class Oyun {
         // Bekleyen zombileri kontrol et
         for (let i = this.bekleyenZombiler.length - 1; i >= 0; i--) {
             const bz = this.bekleyenZombiler[i];
-            if (this.dalgaZamanlayici >= bz.gecikme_ms) {
+            const hedefGecikme = bz.gecikme_ms !== undefined ? bz.gecikme_ms : (bz.gecikme || 0);
+            if (this.dalgaZamanlayici >= hedefGecikme) {
                 // Zombiyi oluştur
-                const merkezY = this.izgara.merkezKoordinat(bz.satir, 0).y; // Y koordinatı satırdan
+                const satir = bz.satir !== undefined ? bz.satir : Math.floor(Math.random() * this.izgara.satirSayisi);
+                const merkezY = this.izgara.merkezKoordinat(satir, 0).y; // Y koordinatı satırdan
                 const baslangicX = this.canvas.width + 50; // Ekranın sağından gelsin
                 
-                const yeniZombi = new Zombi(bz.tip, bz.satir, baslangicX, merkezY);
+                const yeniZombi = new Zombi(bz.tip, satir, baslangicX, merkezY);
                 this.zombiler.push(yeniZombi);
                 
                 // Eğer bu zombi bir boss ise ekranda banner çıkar
@@ -370,6 +522,17 @@ class Oyun {
             console.log("Dalga bitti, kart seçimi başlıyor");
             // Sonraki dalgaya geç
             this.guncelDalgaIndex++;
+            if (typeof maksimumAcilanSeviyeKaydet !== "undefined") {
+                maksimumAcilanSeviyeKaydet(this.guncelDalgaIndex);
+                if (typeof FUSION_TARIFLERI !== "undefined") {
+                    const yeniAcilanFusion = Object.values(FUSION_TARIFLERI).find(t => t.acilma_seviye === this.guncelDalgaIndex);
+                    if (yeniAcilanFusion) {
+                        const yeniBitki = BITKILER_DATA[yeniAcilanFusion.sonuc];
+                        this.fusionAcildiBildir(yeniBitki.ad, this.guncelDalgaIndex);
+                        if (window.sesYonetici) window.sesYonetici.efektCal("kazanma");
+                    }
+                }
+            }
             if (this.guncelDalgaIndex < this.seviye.dalgalar.length) {
                 // Yeni kartları belirle (+1)
                 try {
@@ -405,10 +568,14 @@ class Oyun {
         for (let mermi of this.mermiler) mermi.guncelle(gecenZaman);
         
         // Zombileri güncelle ve çarpışmaları kontrol et
+        for (let bitki of this.bitkiler) {
+            bitki.saldiriAltinda = false;
+        }
+        
         for (let i = 0; i < this.zombiler.length; i++) {
             let zombi = this.zombiler[i];
             
-            // 1. Zombi - Bitki çarpışması (Zombi yiyorsa durmalı)
+            // 1. Zombi - Bitki Çarpışması (Zombi yiyorsa durmalı)
             let hedefeUlasti = false;
             for (let j = 0; j < this.bitkiler.length; j++) {
                 let bitki = this.bitkiler[j];
@@ -417,12 +584,24 @@ class Oyun {
                 if (zombi.satir === bitki.satir && Math.abs(zombi.x - bitki.x) < 40) {
                     hedefeUlasti = true;
                     zombi.hareketEdiyor = false;
+                    bitki.saldiriAltinda = true;
                     
-                    // Isırma zamanı geldiyse
+                    // Temas Dondurma yeteneği varsa
+                    if (bitki.data.ozel_yetenek === "temas_dondurur") {
+                        zombi.yavaslat(0, bitki.data.temas_dondur_sure_ms || 2000);
+                    }
+                    
+                                        // Isırma zamanı geldiyse
                     zombi.sonIsirmaZamani += gecenZaman;
                     if (zombi.sonIsirmaZamani >= zombi.isirmaPeriyot) {
                         bitki.hasarAl(zombi.isirmaHasari);
                         zombi.sonIsirmaZamani = 0;
+                        
+                        // Vampir Zombi HP Emer
+                        if (zombi.tip === "vampir_zombi") {
+                            const emilen = zombi.data.hasar * zombi.data.emme_orani;
+                            zombi.hp = Math.min(zombi.hp + emilen, zombi.maxHp);
+                        }
                     }
                     break;
                 }
@@ -461,13 +640,17 @@ class Oyun {
                         // Patlayan Kavun vb. için alan hasarı
                         let zHucre = this.izgara.hucreBul(zombi.x, zombi.y);
                         let sutun = zHucre ? zHucre.sutun : Math.floor((zombi.x - this.izgara.solBosluk) / this.izgara.hucreGenislik);
-                        this.alanHasariVer(zombi.satir, sutun, mermi.alanYaricap, mermi.hasar, true);
+                        this.alanHasariVer(zombi.satir, sutun, mermi.alanYaricap, mermi.hasar, true, mermi.donduran, mermi.dondurSuresi);
                     } else {
                         // Normal hasar
                         zombi.hasarAl(mermi.hasar);
                         // Yavaşlatma etkisi
                         if (mermi.yavaslatmaOrani) {
                             zombi.yavaslat(mermi.yavaslatmaOrani, mermi.yavaslatmaSuresi);
+                        }
+                        // Dondurma etkisi
+                        if (mermi.donduran) {
+                            zombi.yavaslat(0, mermi.dondurSuresi);
                         }
                     }
                     break; // Bir mermi sadece bir zombiye çarpar (Alan hasarı ayrı verilir)
@@ -582,6 +765,23 @@ class Oyun {
         for (let gunes of this.gunesler) gunes.ciz(this.ctx);
         for (let item of this.itemler) item.ciz(this.ctx);
         
+        // Sürüklenen bitkiyi çiz
+        if (this.surukleAktif && this.suruklenenBitki) {
+            this.ctx.save();
+            this.ctx.globalAlpha = 0.6;
+            const bitkiVeri = BITKILER_DATA[this.suruklenenBitki.bitki.tip];
+            if (bitkiVeri.görsel || bitkiVeri.gorsel) {
+                const gorselYol = bitkiVeri.görsel || bitkiVeri.gorsel;
+                if (window.gorselYukleyici) {
+                    const gorsel = window.gorselYukleyici.getir(gorselYol);
+                    if (gorsel && gorsel.complete) {
+                        this.ctx.drawImage(gorsel, this.surukleKonum.x - 40, this.surukleKonum.y - 40, 80, 80);
+                    }
+                }
+            }
+            this.ctx.restore();
+        }
+        
         // Efektleri çiz (Patlamalar, Yüzen Yazılar vs.)
         for (let efekt of this.efektler) {
             if (efekt.tip === "yazi") {
@@ -598,6 +798,29 @@ class Oyun {
                 
                 this.ctx.strokeText(efekt.metin, efekt.x, efekt.y - yukariHareket);
                 this.ctx.fillText(efekt.metin, efekt.x, efekt.y - yukariHareket);
+                this.ctx.restore();
+            } else if (efekt.tur === "fusion" || efekt.tur === "fusion_acildi") {
+                this.ctx.save();
+                this.ctx.font = "bold 32px 'Press Start 2P', sans-serif";
+                this.ctx.textAlign = "center";
+                this.ctx.textBaseline = "middle";
+                this.ctx.fillStyle = "#FFD700"; // Altın sarısı
+                this.ctx.strokeStyle = "#000000";
+                this.ctx.lineWidth = 6;
+                this.ctx.shadowColor = "#FFFFFF";
+                this.ctx.shadowBlur = 10;
+                
+                const yukariHareket = efekt.tur === "fusion" ? (efekt.gecenZaman / efekt.suresi) * 50 : 0;
+                let scale = 1;
+                if (efekt.tur === "fusion_acildi") {
+                    scale = 1 + Math.sin(efekt.gecenZaman / 200) * 0.1; // Pulsing effect
+                }
+                
+                this.ctx.translate(efekt.x, efekt.y - yukariHareket);
+                this.ctx.scale(scale, scale);
+                
+                this.ctx.strokeText(efekt.metin, 0, 0);
+                this.ctx.fillText(efekt.metin, 0, 0);
                 this.ctx.restore();
             } else if (efekt.gorselYolu && window.gorselYukleyici) {
                 const gorsel = window.gorselYukleyici.getir(efekt.gorselYolu);

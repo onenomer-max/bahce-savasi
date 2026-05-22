@@ -18,10 +18,12 @@ class Bitki {
         this.gorselYolu = veri.görsel;
         this.hp = veri.hp;
         this.maxHp = veri.hp;
-        this.bitkiTipi = veri.tip; // "uretici", "saldirgan", "savunma"
+        this.bitkiTipi = veri.tip; // "uretici", "saldirgan", "savunma" vb (opsiyonel)
         
         // Eylem zamanlayıcıları
-        this.sonEylemZamani = 0;
+        this.sonEylemZamani = 0; // Tek seferlik patlamalar vs için genel
+        this.atisZamanlayici = 0;
+        this.uretimZamanlayici = 0;
         
         // Yetenek (Skill) Değişkenleri
         this.data = veri;
@@ -31,21 +33,39 @@ class Bitki {
         this.orijinalAtisPeriyodu = veri.atis_periyot_ms || 0;
         this.hasarsiz = false;
         
-        // Tipe özel özellikler
-        if (this.bitkiTipi === "uretici") {
-            this.uretimPeriyot = veri.uretim_periyot_ms;
-            this.uretimMiktari = veri.uretim_miktari;
-        } else if (this.bitkiTipi === "saldirgan" || this.bitkiTipi === "havasal_saldirgan" || this.bitkiTipi === "alan_saldirgan") {
+        // Atış özellikleri (Eğer atis_periyot_ms varsa)
+        if (veri.atis_periyot_ms) {
             this.atisPeriyot = veri.atis_periyot_ms;
             this.hasar = veri.hasar;
-        } else if (this.bitkiTipi === "tek_seferlik_patlama") {
+        }
+        
+        // Üretim özellikleri (Eğer gunes_uretir özel yeteneği varsa)
+        if (veri.ozel_yetenek === "gunes_uretir" || veri.tip === "uretici") {
+            this.uretimPeriyot = veri.gunes_periyot_ms || veri.uretim_periyot_ms;
+            this.uretimMiktari = veri.uretim_miktari || 25; // Default 25
+        }
+        
+        // Tek seferlik patlama özellikleri
+        if (veri.tip === "tek_seferlik_patlama" || veri.patlayici) {
             this.patlamaGecikmesi = veri.patlama_gecikme_ms || 1500;
         }
     }
 
     // Her karede çağrılır. Bitkinin saldırı veya üretim yapıp yapmayacağını kontrol eder.
+    // Her karede çağrılır. Bitkinin saldırı veya üretim yapıp yapmayacağını kontrol eder.
     guncelle(gecenZaman) {
+        if (this.sokAltinda) {
+            this.sokBitisZamani -= gecenZaman;
+            if (this.sokBitisZamani <= 0) {
+                this.sokAltinda = false;
+            } else {
+                return; // Şok altındayken hiçbir şey yapma
+            }
+        }
+        
         this.sonEylemZamani += gecenZaman;
+        if (this.atisPeriyot) this.atisZamanlayici += gecenZaman;
+        if (this.uretimPeriyot) this.uretimZamanlayici += gecenZaman;
         
         // Yetenek etki süresi kontrolü (Aktif yetenekler için)
         if (this.yetenekAktif && this.yetenekKalanSure > 0) {
@@ -63,18 +83,27 @@ class Bitki {
             }
         }
         
-        if (this.bitkiTipi === "uretici" && this.sonEylemZamani >= this.uretimPeriyot) {
-            this.gunesUret();
-            this.sonEylemZamani = 0; // Zamanlayıcıyı sıfırla
-        } else if ((this.bitkiTipi === "saldirgan" || this.bitkiTipi === "havasal_saldirgan" || this.bitkiTipi === "alan_saldirgan") && this.sonEylemZamani >= this.atisPeriyot) {
+        // Üretim mantığı
+        if (this.uretimPeriyot && this.uretimZamanlayici >= this.uretimPeriyot) {
+            // Eğer saldırı altında değilse veya vurulurken de üretebiliyorsa
+            if (!this.saldiriAltinda || this.data.vurulurken_uretir) {
+                this.gunesUret();
+            }
+            this.uretimZamanlayici = 0;
+        }
+        
+        // Atış mantığı
+        if (this.atisPeriyot && this.atisZamanlayici >= this.atisPeriyot) {
             this.atesEt();
-            this.sonEylemZamani = 0; // Zamanlayıcıyı sıfırla
-        } else if (this.bitkiTipi === "tek_seferlik_patlama") {
+            this.atisZamanlayici = 0;
+        }
+        
+        // Tek seferlik patlama mantığı
+        if (this.patlamaGecikmesi) {
             if (this.sonEylemZamani >= this.patlamaGecikmesi) {
                 // Patla
                 if (window.OyunYonetici && this.hp > 0) {
-                    const veri = BITKILER_DATA[this.tip];
-                    window.OyunYonetici.alanHasariVer(this.satir, this.sutun, veri.alan_yaricap, veri.hasar, true); 
+                    window.OyunYonetici.alanHasariVer(this.satir, this.sutun, this.data.alan_yaricap || this.data.patlama_alani || 1, this.data.patlama_hasar || this.data.hasar || 200, true);
                 }
                 this.hp = 0; // Kendini yok et
             }
@@ -116,7 +145,7 @@ class Bitki {
         
         let cizimX = this.x;
         // Patlayan kiraz titreme animasyonu (son 500ms)
-        if (this.bitkiTipi === "tek_seferlik_patlama" && (this.patlamaGecikmesi - this.sonEylemZamani) < 500) {
+        if (this.patlamaGecikmesi && (this.patlamaGecikmesi - this.sonEylemZamani) < 500) {
             cizimX += (Math.random() * 4) - 2; // ±2px titreme
         }
         
@@ -175,8 +204,17 @@ class Bitki {
         }
         
         // Can barını çiz (Eğer hasar almışsa göster)
+        if (this.sokAltinda) {
+            ctx.save();
+            ctx.fillStyle = "rgba(0, 255, 255, 0.4)";
+            ctx.fillRect(cizimX - 40, this.y - 40, 80, 80);
+            ctx.font = "20px sans-serif";
+            ctx.fillStyle = "#FFF";
+            ctx.fillText("⚡", cizimX, this.y - 20);
+            ctx.restore();
+        }
+        
         if (this.hp < this.maxHp) {
-            const barGenislik = 40;
             const barYukseklik = 6;
             const barX = cizimX - barGenislik / 2;
             const barY = this.y - 30;

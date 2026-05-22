@@ -39,7 +39,10 @@ class Zombi {
             "gulyabani": 300,
             "nekromant": 280,
             "boss_gulyabani": 300,
-            "boss_nekromant": 280
+            "boss_nekromant": 280,
+            "mekanik_zombi": 320,
+            "vampir_zombi": 290,
+            "zombi_kral": 350
         };
         
         this.frameIndex = 0;
@@ -56,7 +59,10 @@ class Zombi {
             "gulyabani": "zombi_gulyabani_walk",
             "nekromant": "zombi_nekromant_walk",
             "boss_gulyabani": "zombi_gulyabani_walk",
-            "boss_nekromant": "zombi_nekromant_walk"
+            "boss_nekromant": "zombi_nekromant_walk",
+            "mekanik_zombi": "zombi_mekanik_walk",
+            "vampir_zombi": "zombi_vampir_walk",
+            "zombi_kral": "zombi_kral_walk"
         };
         
         if (prefixHaritasi[this.tip]) {
@@ -103,6 +109,41 @@ class Zombi {
                     window.OyunYonetici.zombiler.push(new Zombi("normal", this.satir, this.x + 50, this.y));
                     console.warn("🧙 NEKROMANT bir zombi çağırdı!");
                 }
+            }
+        }
+
+                // Mekanik Zombi - Elektrik Şoku
+        if (this.tip === "mekanik_zombi" && window.OyunYonetici) {
+            this.sonSokZamani = (this.sonSokZamani || 0) + gecenZaman;
+            if (this.sonSokZamani >= this.data.sok_periyot_ms) {
+                this.sonSokZamani = 0;
+                // Aynı satırda en yakın bitkiyi bul
+                const hedefBitki = window.OyunYonetici.bitkiler
+                    .filter(b => b.satir === this.satir && b.x < this.x)
+                    .sort((a,b) => b.x - a.x)[0];
+                if (hedefBitki) {
+                    hedefBitki.sokAltinda = true;
+                    hedefBitki.sokBitisZamani = this.data.sok_sure_ms;
+                    console.warn(`⚡ Mekanik Zombi, ${hedefBitki.ad}'e şok verdi!`);
+                }
+            }
+        }
+        
+        // Zombi Kral - Spawn ve İmmünite
+        if (this.tip === "zombi_kral" && window.OyunYonetici) {
+            this.sonSpawnZamani = (this.sonSpawnZamani || 0) + gecenZaman;
+            if (this.sonSpawnZamani >= this.data.spawn_periyot_ms) {
+                this.sonSpawnZamani = 0;
+                window.OyunYonetici.zombiler.push(new Zombi("normal", this.satir, this.x - 50, this.y));
+                console.warn("👑 Zombi Kral yeni zombi çağırdı!");
+            }
+            
+            this.sonImmuniteDegisim = (this.sonImmuniteDegisim || 0) + gecenZaman;
+            if (this.sonImmuniteDegisim >= this.data.immunite_periyot_ms) {
+                this.sonImmuniteDegisim = 0;
+                const tipler = ["yer", "alan", "yavaslatma", "dondurma"];
+                this.immuniteTipi = tipler[Math.floor(Math.random() * tipler.length)];
+                console.warn(`👑 Zombi Kral İmmünite Değiştirdi: ${this.immuniteTipi}`);
             }
         }
 
