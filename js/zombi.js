@@ -18,7 +18,7 @@ class Zombi {
         this.gorselYolu = veri.görsel;
         this.hp = veri.hp;
         this.maxHp = veri.hp;
-        this.hiz = veri.hiz;
+        this.hiz = veri.hiz || veri.hız || 0.4;
         this.isirmaHasari = veri.isirma_hasar;
         this.isirmaPeriyot = veri.isirma_periyot_ms;
         this.havasal = veri.havasal || false;
