@@ -3,7 +3,7 @@
 const SEVIYELER_DATA = {
   "seviye_1": {
     "ad": "Bahçeye Hoş Geldin",
-    "baslangic_gunes": 50,
+    "baslangic_gunes": 100,
     "dalgalar": [
       // Dalga 1: Tutorial
       {
