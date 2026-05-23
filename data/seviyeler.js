@@ -619,18 +619,10 @@ const SEVIYELER_DATA = {
       {
         "no": 46,
         "dalga_gecikme_ms": 20000,
-        "zombiler": [
-          {"tip": "kaskli", "gecikme_ms": 0},
-          {"tip": "balonlu", "gecikme_ms": 800},
-          {"tip": "hizli", "gecikme_ms": 1800},
-          {"tip": "kaskli", "gecikme_ms": 3000},
-          {"tip": "balonlu", "gecikme_ms": 4200},
-          {"tip": "hizli", "gecikme_ms": 5500},
-          {"tip": "kaskli", "gecikme_ms": 6800},
-          {"tip": "balonlu", "gecikme_ms": 8000},
-          {"tip": "kaskli", "gecikme_ms": 9500},
-          {"tip": "hizli", "gecikme_ms": 11000}
-        ]
+        "cutscene_ninja": true,
+        "zombi_sayisi": 200,
+        "dagit_ms": 8000,
+        "zombiler": []
       },
       // Dalga 47
       {

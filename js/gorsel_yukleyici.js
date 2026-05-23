@@ -102,7 +102,11 @@ class GorselYukleyici {
             "assets/bitkiler/hibrit/buz_kalesi.png",
             "assets/bitkiler/hibrit/patlayan_hava_topu.png",
             "assets/bitkiler/hibrit/buz_kavunu.png",
-            "assets/bitkiler/hibrit/zirhli_aycicegi.png"
+            "assets/bitkiler/hibrit/zirhli_aycicegi.png",
+            "assets/cutscene/ninja_babisko_1.png",
+            "assets/cutscene/ninja_babisko_2.png",
+            "assets/cutscene/ninja_babisko_3.png",
+            "assets/cutscene/ninja_babisko_4.png"
         ];
     }
 

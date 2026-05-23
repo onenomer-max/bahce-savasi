@@ -170,6 +170,24 @@ class Arayuz {
         }, 3000);
     }
 
+    // Ninja Babisko cutscene için özel banner (kırmızı, sessiz)
+    // bossGeliyor()'dan farkı: ses çalmaz, farklı CSS class kullanır
+    ninjaBaslikGoster(baslik) {
+        let banner = document.getElementById("ninja-banner");
+        if (!banner) {
+            banner = document.createElement("div");
+            banner.id = "ninja-banner";
+            document.getElementById("oyun-alani").appendChild(banner);
+        }
+        banner.innerText = baslik;
+        banner.classList.add("aktif");
+        
+        // 1.5 saniye sonra kaybolsun (cutscene faz süreleriyle uyumlu)
+        setTimeout(() => {
+            banner.classList.remove("aktif");
+        }, 1500);
+    }
+
     // Kazandın / Kaybettin mesajı
     oyunBittiMesaji(mesaj) {
         this.merkezMesajEl.innerText = mesaj;

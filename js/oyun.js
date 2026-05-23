@@ -30,6 +30,14 @@ class Oyun {
         
         this.gunesSayisi = this.seviye.baslangic_gunes;
         this.durum = "hazirlik"; // "hazirlik", "oynaniyor", "bitti"
+        
+        // Cutscene state (Ninja Babisko ve gelecek cutscene'ler için)
+        this.cutsceneAktif = false;
+        this.cutsceneFaz = null;        // "yazi" | "saldiri" | "bitis"
+        this.cutsceneZaman = 0;          // Toplam cutscene zamanı (ms)
+        this.cutsceneFrameIndex = 0;     // Ninja animasyon frame (0-3)
+        this.cutsceneFrameZaman = 0;     // Frame değişim sayacı
+        
         this.guncelDalgaIndex = 0;
         this.dalgaZamanlayici = 0;
         this.bekleyenZombiler = []; // Sıradaki dalga için bekleyen zombiler
@@ -57,8 +65,21 @@ class Oyun {
         this.durum = "oynaniyor";
         const dalga = this.seviye.dalgalar[this.guncelDalgaIndex];
         
-        // Zombileri bekleme listesine al (gecikme sürelerine göre sıralı kopyala)
-        this.bekleyenZombiler = dalga.zombiler.map(z => ({ ...z }));
+        // Cutscene dalgası mı? 200 zombiyi otomatik üret
+        if (dalga.cutscene_ninja) {
+            this.bekleyenZombiler = [];
+            const aralik = dalga.dagit_ms / dalga.zombi_sayisi; // 40ms aralık
+            for (let i = 0; i < dalga.zombi_sayisi; i++) {
+                this.bekleyenZombiler.push({
+                    tip: "normal",
+                    gecikme_ms: Math.floor(i * aralik),
+                    satir: i % this.izgara.satirSayisi // 5 satıra eşit dağıt
+                });
+            }
+        } else {
+            this.bekleyenZombiler = dalga.zombiler.map(z => ({ ...z }));
+        }
+        
         this.dalgaZamanlayici = 0;
         
         this.arayuz.dalgaGuncelle(`Dalga ${dalga.no}`);
@@ -481,6 +502,12 @@ class Oyun {
     guncelle(gecenZaman) {
         if (this.durum !== "oynaniyor") return;
         
+        // Cutscene aktifse normal mantık atlanır, sadece cutscene ilerletilir
+        if (this.cutsceneAktif) {
+            this.cutsceneGuncelle(gecenZaman);
+            return;
+        }
+        
         // Gökten rastgele güneş düşürme (Her 10 saniyede bir)
         this.goktenGunesZamanlayici += gecenZaman;
         if (this.goktenGunesZamanlayici >= 10000) {
@@ -514,6 +541,22 @@ class Oyun {
                 
                 // Bekleyenler listesinden çıkar
                 this.bekleyenZombiler.splice(i, 1);
+            }
+        }
+        
+        // Cutscene tetikleme: dalga 46'da 10 zombi canvas yarısına ulaşırsa
+        if (!this.cutsceneAktif) {
+            const aktifDalga = this.seviye.dalgalar[this.guncelDalgaIndex];
+            if (aktifDalga && aktifDalga.cutscene_ninja) {
+                const yari = this.canvas.width / 2;
+                let yariGecenler = 0;
+                for (let z of this.zombiler) {
+                    if (z.x <= yari) yariGecenler++;
+                    if (yariGecenler >= 10) break;
+                }
+                if (yariGecenler >= 10) {
+                    this.cutsceneBaslat();
+                }
             }
         }
         
@@ -831,6 +874,9 @@ class Oyun {
                 }
             }
         }
+        
+        // Cutscene karakterini en üst katmana çiz (zombi/bitki üstünde)
+        this.cutsceneCiz();
     }
 
     yeniKartlariBelirle() {
@@ -880,6 +926,66 @@ class Oyun {
             console.log(`Yeni kart seçildi: ${secilecekKart}`);
         } else {
             console.log(`Yeni kart seçilmedi. (Açılacak kart kalmamış olabilir)`);
+        }
+    }
+
+    // Cutscene'i başlatır (Ninja Babisko ekran ortasına düşer)
+    cutsceneBaslat() {
+        this.cutsceneAktif = true;
+        this.cutsceneFaz = "yazi";
+        this.cutsceneZaman = 0;
+        this.cutsceneFrameIndex = 0;
+        this.cutsceneFrameZaman = 0;
+        
+        // Başlık banner'ı (yeni .ninja-banner CSS class'ı ile)
+        this.arayuz.ninjaBaslikGoster("⚔️ NINJA BABISKO! ⚔️");
+    }
+    
+    // Her karede cutscene state'ini ilerletir
+    // Faz 1 (0-1000ms): Başlık, zombiler donuk durur
+    // Faz 2 (1000-3000ms): Ninja animasyonu, 3000ms'de tüm zombiler silinir
+    // Faz 3 (3000-4000ms): Bitiş mesajı
+    // 4000ms sonra cutsceneAktif=false, dalga otomatik biter (zombiler boş)
+    cutsceneGuncelle(gecenZaman) {
+        this.cutsceneZaman += gecenZaman;
+        
+        // Frame animasyonu (her 500ms frame değişir, 4 frame loop)
+        this.cutsceneFrameZaman += gecenZaman;
+        if (this.cutsceneFrameZaman >= 500) {
+            this.cutsceneFrameZaman = 0;
+            this.cutsceneFrameIndex = (this.cutsceneFrameIndex + 1) % 4;
+        }
+        
+        // Faz geçişleri
+        if (this.cutsceneFaz === "yazi" && this.cutsceneZaman >= 1000) {
+            this.cutsceneFaz = "saldiri";
+        } else if (this.cutsceneFaz === "saldiri" && this.cutsceneZaman >= 3000) {
+            // Tüm zombileri sil (saha + bekleyenler)
+            this.zombiler = [];
+            this.bekleyenZombiler = [];
+            this.cutsceneFaz = "bitis";
+            this.arayuz.ninjaBaslikGoster("Ne zaman yardım lazım olursa, Ninja Babisko hep yanında!");
+        } else if (this.cutsceneFaz === "bitis" && this.cutsceneZaman >= 4000) {
+            // Cutscene bitti, normal akışa dön (dalga otomatik biter)
+            this.cutsceneAktif = false;
+            this.cutsceneFaz = null;
+        }
+    }
+    
+    // Cutscene faz 2/3 sırasında ninja PNG'sini ekran ortasına çizer
+    cutsceneCiz() {
+        if (!this.cutsceneAktif) return;
+        if (this.cutsceneFaz !== "saldiri" && this.cutsceneFaz !== "bitis") return;
+        
+        const frameNo = this.cutsceneFrameIndex + 1; // 1-4
+        const gorselYolu = `assets/cutscene/ninja_babisko_${frameNo}.png`;
+        const gorsel = window.gorselYukleyici && window.gorselYukleyici.getir(gorselYolu);
+        
+        if (gorsel) {
+            const boyut = 200; // Sahada büyük görünsün (kaynak 128, scale up)
+            const merkezX = this.canvas.width / 2;
+            const merkezY = this.canvas.height / 2;
+            this.ctx.drawImage(gorsel, merkezX - boyut / 2, merkezY - boyut / 2, boyut, boyut);
         }
     }
 }
