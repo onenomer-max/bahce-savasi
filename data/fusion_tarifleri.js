@@ -15,7 +15,8 @@ const FUSION_TARIFLERI = {
   "kar_bezelye+patlayan_kavun": { sonuc: "buz_kavunu", acilma_seviye: 40 },
   
   "aycicegi+ceviz": { sonuc: "zirhli_aycicegi", acilma_seviye: 45 },
-  "ceviz+aycicegi": { sonuc: "zirhli_aycicegi", acilma_seviye: 45 }
+  "ceviz+aycicegi": { sonuc: "zirhli_aycicegi", acilma_seviye: 45 },
+  "ceviz+ceviz": { sonuc: "squash", acilma_seviye: 30 }
 };
 
 const MAKSIMUM_ACILMIS_SEVIYE_KEY = "bahce_savasi_max_seviye";

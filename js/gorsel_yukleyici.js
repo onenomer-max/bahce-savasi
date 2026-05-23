@@ -15,6 +15,7 @@ class GorselYukleyici {
             "assets/bitkiler/patlayan_kiraz.png",
             "assets/bitkiler/kaktus.png",
             "assets/bitkiler/gunesli_mantar.png",
+            "assets/bitkiler/squash.png",
             
             "assets/zombiler/zombi_normal.png",
             "assets/zombiler/zombi_koni.png",

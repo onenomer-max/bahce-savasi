@@ -209,5 +209,20 @@ const BITKILER_DATA = {
     "vurulurken_uretir": true,
     "hibrit": true,
     "acilma_seviye": 45
+  },
+  "squash": {
+    "ad": "Squash",
+    "emoji": "🎃",
+    "görsel": "assets/bitkiler/squash.png",
+    "maliyet": 150,
+    "hp": 1,
+    "tip": "tetikleyici_ezme",
+    "hasar": 1800,
+    "tetikleme_mesafesi_hucre": 1,
+    "uyanma_sure_ms": 500,
+    "ziplama_yukseklik_px": 80,
+    "ziplama_sure_ms": 600,
+    "hibrit": true,
+    "acilma_seviye": 30
   }
 };

@@ -863,7 +863,9 @@ class Oyun {
         
         // Eğer öncelikli bir tehdit yoksa veya tehdit bitkileri zaten açıksa, rastgele kalanlardan birini seç
         if (!secilecekKart) {
-            const tumBitkiler = Object.keys(BITKILER_DATA);
+            // BU SATIR: Sadece normal (hibrit olmayan) bitkileri rastgele havuza al.
+            // Hibrit bitkiler fusion ile elde edilir, kart menüsünde görünmemeli.
+            const tumBitkiler = Object.keys(BITKILER_DATA).filter(b => !BITKILER_DATA[b].hibrit);
             const kalanBitkiler = tumBitkiler.filter(b => !this.kilitAcikBitkiler.includes(b));
             if (kalanBitkiler.length > 0) {
                 secilecekKart = kalanBitkiler[Math.floor(Math.random() * kalanBitkiler.length)];

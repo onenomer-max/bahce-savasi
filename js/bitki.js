@@ -49,6 +49,16 @@ class Bitki {
         if (veri.tip === "tek_seferlik_patlama" || veri.patlayici) {
             this.patlamaGecikmesi = veri.patlama_gecikme_ms || 1500;
         }
+
+        // Squash gibi tetikleyici ezme bitkileri için state
+        if (veri.tip === "tetikleyici_ezme") {
+            this.uyandiMi = false;           // 500ms uyanma sonrası true olur
+            this.uyanmaZamanlayici = 0;      // 0'dan uyanma_sure_ms'e sayar
+            this.ziplamaAktif = false;       // Tetiklenince true
+            this.ziplamaZamani = 0;          // 0'dan ziplama_sure_ms'e sayar
+            this.hedefZombi = null;          // Hangi zombi ezilecek
+            this.ezildiMi = false;           // Düşüş sırasında hasar verildi mi (tek vuruş garantisi)
+        }
     }
 
     // Her karede çağrılır. Bitkinin saldırı veya üretim yapıp yapmayacağını kontrol eder.
@@ -108,6 +118,50 @@ class Bitki {
                 this.hp = 0; // Kendini yok et
             }
         }
+
+        // Squash: tetikleyici ezme mantığı
+        if (this.data.tip === "tetikleyici_ezme") {
+            // 1) Uyanma fazı (500ms)
+            if (!this.uyandiMi) {
+                this.uyanmaZamanlayici += gecenZaman;
+                if (this.uyanmaZamanlayici >= this.data.uyanma_sure_ms) {
+                    this.uyandiMi = true;
+                }
+                return; // Uyanmadan hiçbir şey yapma
+            }
+            
+            // 2) Zıplama aktif değilse: aynı satırda 1 hücre ileride zombi tara
+            if (!this.ziplamaAktif && window.OyunYonetici) {
+                const hucreGen = window.OyunYonetici.izgara.hucreGenislik;
+                const tetiklemeXMin = this.x;
+                const tetiklemeXMax = this.x + (this.data.tetikleme_mesafesi_hucre * hucreGen);
+                
+                for (let z of window.OyunYonetici.zombiler) {
+                    if (z.satir === this.satir && z.x >= tetiklemeXMin && z.x <= tetiklemeXMax && z.hp > 0) {
+                        this.hedefZombi = z;
+                        this.ziplamaAktif = true;
+                        this.ziplamaZamani = 0;
+                        break;
+                    }
+                }
+            }
+            
+            // 3) Zıplama aktifse: animasyon zamanlayıcısını ilerlet, düşüş tamamlanınca ez
+            if (this.ziplamaAktif) {
+                this.ziplamaZamani += gecenZaman;
+                
+                // Animasyonun yarısında (tepe noktası) henüz hasar yok
+                // Animasyon tamamlanınca düşüş bitti = ez
+                if (this.ziplamaZamani >= this.data.ziplama_sure_ms && !this.ezildiMi) {
+                    this.ezildiMi = true;
+                    if (this.hedefZombi && this.hedefZombi.hp > 0) {
+                        this.hedefZombi.hasarAl(this.data.hasar, "ezme");
+                    }
+                    this.hp = 0; // Kendi yok ol
+                    if (window.sesYonetici) window.sesYonetici.efektCal("patlama");
+                }
+            }
+        }
     }
 
     // Ayçiçeği için güneş üretme fonksiyonu
@@ -144,9 +198,26 @@ class Bitki {
         let gorselCizildi = false;
         
         let cizimX = this.x;
+        let cizimY = this.y;
+        
         // Patlayan kiraz titreme animasyonu (son 500ms)
         if (this.patlamaGecikmesi && (this.patlamaGecikmesi - this.sonEylemZamani) < 500) {
             cizimX += (Math.random() * 4) - 2; // ±2px titreme
+        }
+        
+        // Squash zıplama animasyonu — parabolik y offset
+        // 0 -> yukarı, ortada tepe noktası, sonra hızla aşağı düşer
+        if (this.data.tip === "tetikleyici_ezme" && this.ziplamaAktif) {
+            const oran = this.ziplamaZamani / this.data.ziplama_sure_ms; // 0.0 -> 1.0
+            // Sinüs ile yumuşak yukarı-aşağı (item.js:38 pattern'inden esin)
+            const yOffset = Math.sin(oran * Math.PI) * this.data.ziplama_yukseklik_px;
+            cizimY -= yOffset; // Yukarı = negatif y
+            
+            // Hedef zombinin üstüne doğru hafifçe kaydır (görsel ezme hissi)
+            if (this.hedefZombi) {
+                const dx = this.hedefZombi.x - this.x;
+                cizimX += dx * oran;
+            }
         }
         
         if (this.gorselYolu && window.gorselYukleyici) {
@@ -154,7 +225,7 @@ class Bitki {
             if (gorsel) {
                 // 2. PNG çiz (Hücreye sığması için 80x80 boyutunda merkeze)
                 const boyut = 80;
-                ctx.drawImage(gorsel, cizimX - boyut / 2, this.y - boyut / 2, boyut, boyut);
+                ctx.drawImage(gorsel, cizimX - boyut / 2, cizimY - boyut / 2, boyut, boyut);
                 gorselCizildi = true;
             }
         }
@@ -171,7 +242,7 @@ class Bitki {
             ctx.font = "48px 'Press Start 2P', sans-serif";
             ctx.textAlign = "center";
             ctx.textBaseline = "middle";
-            ctx.fillText(this.emoji, cizimX, this.y);
+            ctx.fillText(this.emoji, cizimX, cizimY);
             ctx.restore();
         }
         
